@@ -412,6 +412,44 @@
 function checkKey() {
     let key = document.getElementById('keyInput').value;
     let authModal = document.getElementById('auth-modal');
+    <!-- یہ رہا آپ کا لاگ ان ماڈل -->
+<div id="auth-modal" style="...">
+    ... (آپ کا پرانا کوڈ) ...
+</div>
+
+<!-- یہ رہا آپ کا نیا سکسیس پاپ اپ -->
+<div id="success-popup" style="...">
+    ... (نیا ڈیزائن والا کوڈ) ...
+</div>
+
+<!-- یہ رہا آپ کا اسکرپٹ (اسے یہاں ڈالیں) -->
+<script>
+    window.onload = function() {
+        if (localStorage.getItem("isAuthorized") === "true") {
+            document.getElementById('auth-modal').style.display = 'none';
+        }
+    };
+
+    function checkKey() {
+        let key = document.getElementById('keyInput').value;
+        let authModal = document.getElementById('auth-modal');
+        let successPopup = document.getElementById('success-popup');
+
+        if (key === "256050") {
+            localStorage.setItem("isAuthorized", "true");
+            authModal.style.display = 'none';
+            successPopup.style.display = 'flex';
+            setTimeout(() => {
+                successPopup.style.display = 'none';
+            }, 2000);
+        } else {
+            let input = document.getElementById('keyInput');
+            input.style.border = "1px solid red";
+            input.value = "";
+            input.placeholder = "Ghalat key! Dubara koshish karein";
+        }
+    }
+</script>
     let successPopup = document.getElementById('success-popup');
 
     if (key === "256050") {
