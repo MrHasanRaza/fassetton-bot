@@ -237,19 +237,28 @@
     </div>
 
     <script>
-        let countdownInterval;   // Global declaration (important)
-
-        // Live Time PKT
-        function updateLiveTime() {
-            const timeElement = document.getElementById('liveUTC');
-            setInterval(() => {
-                const now = new Date();
-                const pkTime = new Date(now.getTime() + 5 * 60 * 60 * 1000);
-                const timeStr = pkTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-                timeElement.textContent = timeStr + " PKT";
-            }, 1000);
-        }
-
+       // Live Time PKT (Updated)
+function updateLiveTime() {
+    const timeElement = document.getElementById('liveUTC');
+    
+    function setTime() {
+        const now = new Date();
+        // UTC time mein 5 hours add kar ke PKT hasil karna
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const pkTime = new Date(utc + (5 * 60 * 60 * 1000));
+        
+        const timeStr = pkTime.toLocaleTimeString('en-GB', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit', 
+            hour12: false 
+        });
+        timeElement.textContent = timeStr + " PKT";
+    }
+    
+    setTime(); // Pehli dafa foran chalane ke liye
+    setInterval(setTime, 1000); // Har second update ke liye
+}
         // Strategy buttons
         const strategyButtons = document.querySelectorAll('.strategy-btn');
         strategyButtons.forEach(btn => {
