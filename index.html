@@ -415,15 +415,27 @@
     <div style="background:#111; padding:40px; border-radius:20px; border:1px solid #00d4ff; text-align:center; box-shadow:0 0 30px rgba(0,212,255,0.3);">
         <div style="font-size:50px; color:#00d4ff; margin-bottom:20px;">✓</div>
         <h2 style="color:white; margin:0;">Access Granted</h2>
-        <p style="color:#888; margin-top:10px;">WELCOME۔</p>
+        <p style="color:#888; margin-top:10px;">WELCOME</p>
     </div>
 </div>
 
 <script>
-    // پیج لوڈ ہوتے ہی چیک کریں کہ کیا یوزر پہلے سے لاگ ان ہے
+    // پیج لوڈ ہوتے ہی چیک کریں کہ کیا 24 گھنٹے گزر چکے ہیں؟
     window.onload = function() {
-        if (localStorage.getItem("isAuthorized") === "true") {
-            document.getElementById('auth-modal').style.display = 'none';
+        let savedTime = localStorage.getItem("authTimestamp");
+        
+        if (savedTime) {
+            let currentTime = new Date().getTime(); // موجودہ وقت
+            let timeDifference = currentTime - parseInt(savedTime); // کتنا وقت گزر چکا ہے
+            let twentyFourHours = 24 * 60 * 60 * 1000; // 24 گھنٹے ملی سیکنڈز میں
+            
+            if (timeDifference < twentyFourHours) {
+                // اگر 24 گھنٹے سے کم وقت ہوا ہے تو کوڈ مت مانگو
+                document.getElementById('auth-modal').style.display = 'none';
+            } else {
+                // اگر 24 گھنٹے پورے ہو گئے ہیں تو پرانا ریکارڈ ڈیلیٹ کر دو
+                localStorage.removeItem("authTimestamp");
+            }
         }
     };
 
@@ -433,8 +445,10 @@
         let successPopup = document.getElementById('success-popup');
 
         if (key === "256050") {
-            // کامیابی: ڈیٹا سیو کریں اور پاپ اپ دکھائیں
-            localStorage.setItem("isAuthorized", "true");
+            // کامیابی: موجودہ وقت کو براؤزر میں سیو کر لیں
+            let currentTime = new Date().getTime();
+            localStorage.setItem("authTimestamp", currentTime);
+            
             authModal.style.display = 'none';
             successPopup.style.display = 'flex';
             
